@@ -31,8 +31,3 @@ COMPATIBLE_MACHINE = "^qemu.*cheri$"
 # Keep kernel_configcheck task happy when it calls symbol_why.py
 CLANG_FLAGS:toolchain-clang = "-fintegrated-as"
 export CLANG_FLAGS
-
-KERNEL_FEATURES:remove = "features/debug/printk.scc"
-KERNEL_FEATURES:remove = "features/kernel-sample/kernel-sample.scc"
-KERNEL_FEATURES:remove = "features/taskstats/taskstats.scc"
-KERNEL_FEATURES:remove = "cfg/fs/vfat.scc"
