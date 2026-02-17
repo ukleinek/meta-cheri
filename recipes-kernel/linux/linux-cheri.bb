@@ -34,12 +34,6 @@ COMPATIBLE_MACHINE = "^qemu.*cheri$"
 CLANG_FLAGS:toolchain-clang = "-fintegrated-as"
 export CLANG_FLAGS
 
-do_install:append() {
-	if ! (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
-		oe_runmake DEPMOD=echo MODLIB=${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION} INSTALL_FW_PATH=${D}${nonarch_base_libdir}/firmware modules_install
-	fi
-}
-
 KERNEL_FEATURES:remove = "features/debug/printk.scc"
 KERNEL_FEATURES:remove = "features/kernel-sample/kernel-sample.scc"
 KERNEL_FEATURES:remove = "features/taskstats/taskstats.scc"
