@@ -11,8 +11,6 @@ KCONF_AUDIT_LEVEL ?= "2"
 CONF_BSP_AUDIT_LEVEL ?= "3"
 KMETA_AUDIT ?= "yes"
 
-KERNEL_VERSION_SANITY_SKIP = "1"
-
 SRCREV = "${AUTOREV}"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 ERROR_QA:remove = "version-going-backwards"
