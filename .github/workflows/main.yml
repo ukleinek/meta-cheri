@@ -23,12 +23,12 @@ jobs:
               sudo mkdir -p ${{env.BUILD_DIR}}
               echo HOME=/home/ci | sudo tee -a $GITHUB_ENV
               sudo ln -sf /home/ci ${{env.BUILD_DIR}}
-   
+
          - name: Checkout layers
            uses: actions/checkout@v4
            with:
               path: ${{env.BUILD_DIR}}
-   
+
          - name: Build kas
            run: |
             cd $BUILD_DIR
