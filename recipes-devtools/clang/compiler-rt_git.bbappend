@@ -59,3 +59,56 @@ PROVIDES:append:class-target = "\
 EXTRA_OECMAKE:append:libc-musl = " -DCOMPILER_RT_BUILD_STANDALONE_LIBATOMIC=ON"
 
 COMPATIBLE_HOST = "${HOST_SYS}"
+
+# Undo meta-clang's multilib install:append path and stick it all in ${libdir}
+do_install:append () {
+
+    if [ -n "${MULTILIBS}" ]; then
+
+        if [ -n "${LLVM_LIBDIR_SUFFIX}" ]; then
+
+            if [ -d "${D}${nonarch_libdir}/clang" ]; then
+
+                mkdir -p ${D}${libdir}/clang
+
+                mv ${D}${nonarch_libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER} ${D}${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}
+
+                rmdir --ignore-fail-on-non-empty ${D}${nonarch_libdir}/clang ${D}${nonarch_libdir}
+            fi
+        fi
+    fi
+}
+
+# The files now live in ${libdir}
+FILES:${PN}:append:virtclass-multilib-lib64i = " \
+${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib/linux/lib*${SOLIBSDEV} \
+${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/*.txt \
+${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/share/*.txt"
+
+FILES:${PN}-staticdev:append:virtclass-multilib-lib64i = " ${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib/linux/*.a"
+
+FILES:${PN}-dev:append:virtclass-multilib-lib64i = " ${datadir} ${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib/linux/*.syms \
+                    ${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/include \
+                    ${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib/linux/clang_rt.crt*.o \
+                    ${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib/linux/libclang_rt.asan-preinit*.a"
+
+
+
+# Copy headers to the resource-dir as well as we now set the resource-dir
+# variable explicitly and point it to ${libdir}
+do_install:append:class-target () {
+
+    if [ -n "${MULTILIBS}" ]; then
+
+        install -d ${D}$${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}
+
+        if [ -d "${STAGING_DIR_NATIVE}${nonarch_libdir}/clang/${MAJOR_VER}/include" ]; then
+
+            cp -rf ${STAGING_DIR_NATIVE}${nonarch_libdir}/clang/${MAJOR_VER}/include ${D}${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/
+        fi
+    fi
+}
+
+FILES:${PN}-dev += " \
+    ${libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/include/* \
+"
