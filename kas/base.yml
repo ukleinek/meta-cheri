@@ -1,5 +1,5 @@
 header:
-  version: 16
+  version: 21
 
 distro: cheri
 
@@ -9,6 +9,9 @@ defaults:
 
 repos:
   meta-cheri:
+      layers:
+        .:
+          prio: -99
 
   poky:
     url: "https://git.yoctoproject.org/git/poky"

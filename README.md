@@ -17,7 +17,7 @@ or install it from via your normal distribution's way, e.g.
 sudo apt install kas
 ```
 
-Please note that kas at version 5.1+ is preferable, to check version see
+Please note that kas at version 5.2 is required, to check version see
 
 ```shell
 kas --version
