@@ -1,0 +1,24 @@
+From 0d20016d3a740c5dacba599447bcc27677940878 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?=
+ <u.kleine-koenig@baylibre.com>
+Date: Thu, 12 Mar 2026 17:38:55 +0100
+Subject: [PATCH] WIP
+
+Upstream-Status: Inappropriate
+---
+ src/cmd/compile/internal/ssa/config.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/cmd/compile/internal/ssa/config.go b/src/cmd/compile/internal/ssa/config.go
+index debcf1a0f465..33dacb606c71 100644
+--- a/src/cmd/compile/internal/ssa/config.go
++++ b/src/cmd/compile/internal/ssa/config.go
+@@ -322,7 +322,7 @@ func NewConfig(arch string, types Types, ctxt *obj.Link, optimize, softfloat boo
+ 		c.hasGReg = true
+ 		c.noDuffDevice = true
+ 	case "riscv64":
+-		c.PtrSize = 8
++		c.PtrSize = 16
+ 		c.RegSize = 8
+ 		c.lowerBlock = rewriteBlockRISCV64
+ 		c.lowerValue = rewriteValueRISCV64
