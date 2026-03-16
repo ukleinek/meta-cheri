@@ -5,12 +5,12 @@ on:
     branches:
       - codasip-scarthgap
   pull_request:
-    types: [review_requested]
+    types: [review_requested, edited, synchronize]
 
   workflow_dispatch:
 
 jobs:
-   qemu-riscv64-cheri-minimal:
+   qemu-riscv64-cheri-minimal-multilib:
       runs-on: the-capable-hub-aws-ci
       env:
          BUILD_DIR: ${{github.workspace}}/volatile/${{ github.job }}
@@ -23,16 +23,16 @@ jobs:
               sudo mkdir -p ${{env.BUILD_DIR}}
               echo HOME=/home/ci | sudo tee -a $GITHUB_ENV
               sudo ln -sf /home/ci ${{env.BUILD_DIR}}
-   
+
          - name: Checkout layers
            uses: actions/checkout@v4
            with:
               path: ${{env.BUILD_DIR}}
-   
+
          - name: Build kas
            run: |
             cd $BUILD_DIR
-            kas build kas/qemu-riscv64-cheri-minimal.yml
+            kas build kas/qemu-riscv64-cheri-minimal-multilib.yml
 
          - name: Upload build logs on failure
            if: failure()
@@ -48,5 +48,38 @@ jobs:
               name: artifacts_${{ github.job }}
               path: |
                  ${{env.BUILD_DIR}}/build/tmp-musl/deploy/images/qemuriscv64cheri/core-image-minimal-qemuriscv64cheri.rootfs.ext4
-                 ${{env.BUILD_DIR}}/build/tmp-musl/deploy/images/qemuriscv64cheri/fw_jump.bin
+                 ${{env.BUILD_DIR}}/build/tmp-musl/deploy/images/qemuriscv64cheri/fw_dynamic.bin
                  ${{env.BUILD_DIR}}/build/tmp-musl/deploy/images/qemuriscv64cheri/Image
+
+   # check if non-multilib still builds
+   qemu-riscv64-cheri-minimal:
+      runs-on: the-capable-hub-aws-ci
+      env:
+         BUILD_DIR: ${{github.workspace}}/volatile/${{ github.job }}
+      container:
+        image: capablehub/cheri-yocto:latest
+
+      steps:
+         - name: Setup
+           run: |
+              sudo mkdir -p ${{env.BUILD_DIR}}
+              echo HOME=/home/ci | sudo tee -a $GITHUB_ENV
+              sudo ln -sf /home/ci ${{env.BUILD_DIR}}
+
+         - name: Checkout layers
+           uses: actions/checkout@v4
+           with:
+              path: ${{env.BUILD_DIR}}
+
+         - name: Build kas
+           run: |
+            cd $BUILD_DIR
+            kas build kas/qemu-riscv64-cheri-minimal.yml
+
+         - name: Upload build logs on failure
+           if: failure()
+           uses: actions/upload-artifact@v4
+           with:
+             name: failure-logs
+             path: |
+               ${{env.BUILD_DIR}}/build/tmp*/work*/**/temp/*.do_*.*
