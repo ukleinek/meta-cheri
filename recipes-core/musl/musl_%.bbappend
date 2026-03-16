@@ -1,4 +1,4 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/musl:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI = " \
     git://${META_CHERI_MUSL_REPO};protocol=${META_CHERI_MUSL_PROTOCOL};branch=${META_CHERI_MUSL_BRANCH} \
@@ -16,12 +16,24 @@ DEPENDS:remove = "libssp-nonshared"
 
 RDEPENDS:${PN}-dev:remove = "libssp-nonshared-staticdev"
 
+
+SRC_URI += "\
+              file://0001-Makefile-use-MUSL_LDSO_ARCH-variable-across-the-stac.patch \
+            "
+
 # musl Makefile uses
 #   STRIP  = $(CROSS_COMPILE)strip
 # which is the bfd strip, which fails with:
 #   riscv64-codasip-linux-musl-strip: lib/libc.so.striped: not enough room for program headers, try linking with -N
 # so force the use of llvm strip
 EXTRA_OEMAKE += "STRIP=${STRIP}"
+
+# override MUSL_LDSO_ARCH to match TUNE_PKGARCH
+MUSL_LDSO_ARCH = "${TUNE_PKGARCH}"
+# pass it to musl makefile to use for generating the dynamic linker symlink
+# so that all of the files that end up in /usr/lib and /usr/etc are matched and
+# driven by the one same variable - which is not the case currently.
+EXTRA_OEMAKE += "MUSL_LDSO_ARCH=${MUSL_LDSO_ARCH}"
 
 # musl builds with -nostdlib and -ffreestanding, so cannot access
 # cheri_init_globals_bw.h directly. Copy it into the build for now
