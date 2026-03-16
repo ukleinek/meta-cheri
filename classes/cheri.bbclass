@@ -67,10 +67,10 @@ PACKAGECONFIG:remove:pn-libxml2:class-target:cheri = "python"
 
 # libzstd's pointer arithmetics produces unrepresentable addresses
 # there's no simple way to fix this
-SKIP_RECIPE[zstd] = "libzstd has not been adapted for cheri yet"
+SKIP_RECIPE[zstd] ?= "libzstd has not been adapted for cheri yet"
 
 # Can't currently build python for CHERI
-SKIP_RECIPE[python3] = "python has not been adapted for cheri yet"
+SKIP_RECIPE[python3] ?= "python has not been adapted for cheri yet"
 
 # Prevent building gcc, binutils and glibc, which we can't currently
 # do for CHERI.
