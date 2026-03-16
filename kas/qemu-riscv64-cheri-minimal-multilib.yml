@@ -2,6 +2,7 @@ header:
   version: 16
   includes:
     - kas/base.yml
+    - kas/riscv64-multilib.yml
 
 machine: qemuriscv64cheri
 

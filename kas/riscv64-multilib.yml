@@ -1,0 +1,43 @@
+header:
+  version: 16
+
+machine: unset
+
+local_conf_header:
+
+  multilib_config: |
+
+    require conf/multilib.conf
+
+    MULTILIBS = "multilib:lib64i"
+    MULTILIB_GLOBAL_VARIANTS += "lib64i"
+
+    DEFAULTTUNE:virtclass-multilib-lib64i = "codasip-lux"
+
+    BASELIB                             = "lib"
+    BASELIB:virtclass-multilib-lib64i   = "lib64i"
+
+    # Set clang resource dir explicitly, add prefix for search path and
+    # also set linker flags; -L${STAGING_LIBDIR}/--dynamic-linker/-rpath here
+    # so the LDFLAGS are not lost during the config stages of packages like
+    # perl
+
+    TARGET_CC_ARCH:append = " \
+    -resource-dir=${STAGING_DIR_TARGET}${libdir}/clang/${LLVMVERSION}  \
+    --prefix=${STAGING_LIBDIR} \
+    -L${STAGING_LIBDIR} \
+    -Wl,--dynamic-linker=${nonarch_base_libdir}/ld-musl-${TUNE_PKGARCH}.so.1 \
+    -Wl,-rpath=${libdir}:${base_libdir} \
+    "
+
+    # for python3 in integer mode
+    SKIP_RECIPE[python3] = ""
+
+  multilib_install: |
+    IMAGE_INSTALL:append = " \
+                            lib64i-musl \
+                            lib64i-compiler-rt \
+                            lib64i-libcxx \
+                            lib64i-compiler-rt-sanitizers \
+                            lib64i-python3 \
+                            "
