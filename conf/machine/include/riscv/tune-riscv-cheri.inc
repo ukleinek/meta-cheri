@@ -8,14 +8,14 @@ TUNEVALID[codasip-lux-cheri] = "Enable 64-bit RISC-V with Codasip Lux extensions
 AVAILTUNES += "riscv64cheri codasip-lux codasip-lux-cheri"
 
 TUNE_FEATURES:tune-riscv64cheri = "${TUNE_FEATURES:tune-riscv64} riscv64cheri"
-TUNE_ARCH:tune-riscv64cheri = "riscv64"
+TUNE_ARCH:tune-riscv64cheri = "riscv64c"
 TUNE_PKGARCH:tune-riscv64cheri = "riscv64cheri"
 PACKAGE_EXTRA_ARCHS:tune-riscv64cheri = "riscv64cheri"
 
 TUNE_FEATURES:tune-codasip-lux = "${TUNE_FEATURES:tune-riscv64} codasip-lux"
-TUNE_ARCH:tune-codasip-lux = "riscv64"
-TUNE_PKGARCH:tune-codasip-lux = "riscv64"
-PACKAGE_EXTRA_ARCHS:tune-codasip-lux = "riscv64"
+TUNE_ARCH:tune-codasip-lux = "riscv64c"
+TUNE_PKGARCH:tune-codasip-lux = "riscv64c"
+PACKAGE_EXTRA_ARCHS:tune-codasip-lux = "riscv64c"
 
 TUNE_FEATURES:tune-codasip-lux-cheri = "${TUNE_FEATURES:tune-riscv64} riscv64cheri codasip-lux"
 TUNE_ARCH:tune-codasip-lux-cheri = "riscv64"
